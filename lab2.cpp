@@ -92,31 +92,18 @@ double df2(double x)
     return -0.25 / (x * sqrt(x)) + 0.149769 * cos(0.387 * x);
 }
 
-std::vector<std::vector<std::string>> applyFunctions(const std::vector<std::vector<double>> &snapshot)
+std::vector<std::vector<std::string>> applyFunctions(const std::vector<std::vector<double>> &snapshot, bool useNewton = false)
 {
     std::vector<std::vector<std::string>> result;
     for (const auto &screen : snapshot)
     {
+        double x = screen[1];
+        double fx = f(x);
         std::vector<std::string> row = {
-            std::to_string(screen[1]),
-            std::to_string(f(screen[1])),
-            std::to_string(df(screen[1])),
-            std::to_string(fabs(screen[1] - screen[0]))};
-        result.push_back(row);
-    }
-    return result;
-}
-
-std::vector<std::vector<std::string>> applyFunctions2(const std::vector<std::vector<double>> &snapshot)
-{
-    std::vector<std::vector<std::string>> result;
-    for (const auto &screen : snapshot)
-    {
-        std::vector<std::string> row = {
-            std::to_string(screen[1]),
-            std::to_string(f(screen[1])),
-            std::to_string(1 / (1 + f(screen[1]))),
-            std::to_string(fabs(screen[1] - screen[0]))};
+            std::to_string(x),
+            std::to_string(fx),
+            std::to_string(useNewton ? df(x) : 1 / (1 + fx)),
+            std::to_string(fabs(x - screen[0]))};
         result.push_back(row);
     }
     return result;
@@ -201,7 +188,7 @@ int main()
     }
 
     auto [newton_root, newton_steps] = newton_method(x0, EPS);
-    auto newton_values = applyFunctions(newton_steps);
+    auto newton_values = applyFunctions(newton_steps, true);
 
     table2.insert(
         table2.end(),
