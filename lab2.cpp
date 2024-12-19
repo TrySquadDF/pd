@@ -5,9 +5,11 @@
 #include <iomanip>
 #include <cmath>
 
+#ifdef _WIN32
 #include <io.h>
 #include <fcntl.h>
 #include <windows.h>
+#endif
 
 // Unicode box drawing characters
 const wchar_t VERTICAL = L'│';
@@ -99,8 +101,7 @@ std::vector<std::vector<std::string>> applyFunctions(const std::vector<std::vect
             std::to_string(screen[1]),
             std::to_string(f(screen[1])),
             std::to_string(df(screen[1])),
-            std::to_string(fabs(screen[1] - screen[0]))
-        };
+            std::to_string(fabs(screen[1] - screen[0]))};
         result.push_back(row);
     }
     return result;
@@ -115,8 +116,7 @@ std::vector<std::vector<std::string>> applyFunctions2(const std::vector<std::vec
             std::to_string(screen[1]),
             std::to_string(f(screen[1])),
             std::to_string(1 / (1 + f(screen[1]))),
-            std::to_string(fabs(screen[1] - screen[0]))
-        };
+            std::to_string(fabs(screen[1] - screen[0]))};
         result.push_back(row);
     }
     return result;
@@ -149,7 +149,6 @@ std::pair<double, std::vector<std::vector<double>>> newton_method(double x0, con
 
     std::vector<std::vector<double>> snapshot;
 
-
     while (fabs(x1 - x) >= EPS)
     {
         snapshot.push_back({x, x1});
@@ -162,9 +161,12 @@ std::pair<double, std::vector<std::vector<double>>> newton_method(double x0, con
 
 int main()
 {
+#ifdef _WIN32
     _setmode(_fileno(stdout), _O_U16TEXT);
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
+#endif
+
     std::vector<std::vector<std::string>> table = {
         {"x", "f(x)", "1/((1+fx1))", "|x1-x|"}};
     std::vector<std::vector<std::string>> table2 = {
@@ -183,8 +185,7 @@ int main()
     table.insert(
         tableStartIndex,
         std::make_move_iterator(chord_values.begin()),
-        std::make_move_iterator(chord_values.end())
-    );
+        std::make_move_iterator(chord_values.end()));
 
     printTable(table);
 
@@ -205,8 +206,7 @@ int main()
     table2.insert(
         table2.end(),
         std::make_move_iterator(newton_values.begin()),
-        std::make_move_iterator(newton_values.end())
-    );
+        std::make_move_iterator(newton_values.end()));
 
     printTable(table2);
 
