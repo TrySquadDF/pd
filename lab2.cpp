@@ -51,7 +51,7 @@ std::vector<size_t> calculateColumnWidths(const std::vector<std::vector<std::str
         for (size_t i = 0; i < row.size(); ++i)
         {
             // Обновляем максимальную ширину если текущий элемент длиннее
-            colWidths[i] = std::max(colWidths[i], row[i].length());
+            colWidths[i] = (std::max)(colWidths[i], row[i].length());
         }
     }
     return colWidths;
